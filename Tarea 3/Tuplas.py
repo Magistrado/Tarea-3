@@ -15,7 +15,7 @@ class Tuplas():
         return self.offset
     
     def obtType(self):
-        return self.final
+        return self.type
     
     def __str__(self):
         return '['+str(self.offset)+','+str(self.type)+']'
