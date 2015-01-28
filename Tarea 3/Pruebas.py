@@ -26,7 +26,7 @@ class Test(unittest.TestCase):
     
     def testReservacionInvalida_HoraEntradaMayorHoraSalida(self):
         estacio=Estacionamiento() 
-        self.asserEqual(estacio.reservar(18,6), "La hora entrada debe ser menor a la salida")
+        self.assertEqual(estacio.reservar(18,6), "La hora entrada debe ser menor a la salida")
                 
 
 if __name__ == "__main__":
