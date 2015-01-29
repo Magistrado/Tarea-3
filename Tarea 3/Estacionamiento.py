@@ -2,6 +2,7 @@
 Created on 27/01/2015
 
 @author: Daniel
+@author: Gabriel
 '''
 from Tuplas import Tuplas
 from Reserva import Reserva
@@ -16,23 +17,25 @@ class Estacionamiento:
     capacidad = 10
 
     def reservar(self, horaEntrada, horaSalida):
-        if horaEntrada<6 and horaEntrada>18:
-            return "Horas introducidas invalidas"  
+        if horaEntrada<6 or horaEntrada>18:
+            print("Horas introducidas invalidas")
+            return False
         
-        if  horaSalida>18 and horaSalida<6:
-            return "Horas introducidas invalidas" 
+        if  horaSalida>18 or horaSalida<6:
+            print("Horas introducidas invalidas")
+            return False
        
         if horaEntrada>=horaSalida:
-            return "La hora entrada debe ser menor a la salida"        
+            print("La hora entrada debe ser menor a la salida")
+            return False       
         
-        print("\nRESERVA EN PROGRESO")
         #Convertir en tupla para uso del algoritmo de Marzullo
         tupla1 = Tuplas(horaEntrada,-1)
         self.tablasTuplas.append(tupla1)        
         tupla2 = Tuplas(horaSalida,1)
         self.tablasTuplas.append(tupla2)        
         
-        self.algoritmoMarzullo()
+        return self.algoritmoMarzullo()
         
     def algoritmoMarzullo(self):  
         best = 0
@@ -40,7 +43,6 @@ class Estacionamiento:
         beststart = 0
         bestend = 0
         self.tablasTuplas.sort(key=functools.cmp_to_key(self.compararTuplas))
-        
         i = 0
         for tupla in self.tablasTuplas:
             i += 1
@@ -49,8 +51,8 @@ class Estacionamiento:
                 best=cnt
                 beststart = tupla.obtOffset()
                 if i < len(self.tablasTuplas) -1 :
-                    bestend = self.tablasTuplas[i+1].obtOffset()
-        if best <= self.capacidad:            
+                    bestend = self.tablasTuplas[i+1].obtOffset()           
+        if best <= self.capacidad:
             self.reservasAdmitidas.append(Reserva(beststart, bestend))
             print('Reservacion concretada con exito.')
             return True
@@ -59,39 +61,10 @@ class Estacionamiento:
             return False
         
     def compararTuplas(self,tupla1, tupla2):
-        return tupla1.offset - tupla2.offset   
-        
-Esta=Estacionamiento()    
-Esta.reservar(8,12)
-Esta.reservar(11,13)
-Esta.reservar(10,12)
-   
-
-'''
-lista=[]
-tupla1=Tuplas(10,-1)
-lista.append(tupla1) 
-tupla1=Tuplas(12,1)
-lista.append(tupla1)
-tupla1=Tuplas(11,-1)
-lista.append(tupla1)
-tupla1=Tuplas(13,1)
-lista.append(tupla1)
-
-tupla1=Tuplas(8,-1)
-lista.append(tupla1)
-tupla1=Tuplas(12,1)
-lista.append(tupla1)
-Esta=Estacionamiento(10)
-Esta.anexarCasos(lista)
-print(lista)
-'''
-Esta.reservar(10,12)
-Esta.reservar(11,13)
-Esta.reservar(8,12)
-Esta.reservar(6,12)
-'''    
-Esta.reservar(10,12)
-Esta.reservar(11,13)
-Esta.reservar(8,12)
-'''
+        return tupla1.offset - tupla2.offset
+    
+    def anexar(self, listacasos):
+        for caso in listacasos:
+            if not self.reservar(caso[0], caso[1]):
+                return False
+        return True

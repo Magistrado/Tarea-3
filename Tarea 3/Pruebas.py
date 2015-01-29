@@ -2,59 +2,62 @@
 Created on 27/01/2015
 
 @author: Daniel
+@author: Gabriel
 '''
 import unittest
 from Estacionamiento import Estacionamiento
-from Tuplas import Tuplas
 
-class Test(unittest.TestSuite):
+class TestMarzullo(unittest.TestCase):
     
-    class Test_EntradasReservacion(unittest.TestCase):
+    def setUp(self):
+        print('Preparando casos Marzulo')
+        self.lista = []
+        self.Esta = Estacionamiento()
+        self.lista.append((10, 12))
+        self.lista.append((8, 12))
+        self.lista.append((10, 12))
+        self.lista.append((10, 12))
+        self.lista.append((10, 12))
+        self.lista.append((7, 12))
+        self.lista.append((6, 12))
+        self.lista.append((9, 12))
+        self.lista.append((10, 12))
+        self.lista.append((10, 12))
+        self.lista.append((10, 12))
         
-        def setUp(self):
-            pass
-    
-        def tearDown(self):
-            pass
-    
-        def testReservacionInvalida_HoraIiguales1(self):
-            estacio=Estacionamiento()        
-            self.assertEqual(estacio.reservar(6,6),
-                             "Horas introducidas invalidas")
-            
-        def testReservacionInvalida_HoraIiguales2(self):  
-            estacio=Estacionamiento()       
-            self.assertEqual(estacio.reservar(18,18),
-                             "Horas introducidas invalidas")
+        self.lista2 = []
+        self.Esta2 = Estacionamiento()
+        self.lista2.append((10, 12))
+        self.lista2.append((6, 8))
+        self.lista2.append((11,12))
+
+    def tearDown(self):
+        print('Limpiando casos Marzulo')
+
+    def testReservacionInvalida_HoraIiguales1(self):
+        estacio = Estacionamiento()        
+        self.assertFalse(estacio.reservar(6,6))
         
-        def testReservacionInvalida_HoraEntradaMayorHoraSalida(self):
-            estacio=Estacionamiento() 
-            self.assertEqual(estacio.reservar(18,6), 
-                             "La hora entrada debe ser menor a la salida")
-     
-
-    class TestAlgoritmoMarzullo(unittest.TestCase): 
+    def testReservacionInvalida_EntradaMenor(self):  
+        estacio=Estacionamiento()       
+        self.assertFalse(estacio.reservar(5,12))
     
-        def Test_CasoPequeño(self):
-            lista=[]
-            tupla1=Tuplas(10,-1)
-            lista.append(tupla1) 
-            tupla1=Tuplas(12,1)
-            lista.append(tupla1)
-            tupla1=Tuplas(11,-1)
-            lista.append(tupla1)
-            tupla1=Tuplas(13,1)
-            lista.append(tupla1)
-            tupla1=Tuplas(8,-1)
-            lista.append(tupla1)
-            tupla1=Tuplas(12,1)
-            lista.append(tupla1)
-            Esta=Estacionamiento()
-            Esta.anexar(lista)
-            TuplaSol=Tuplas(11,12)
-            tuplaResul=Esta.algoritmoMarzullo()
-            self.AssertEqual(tuplaResul,TuplaSol)
+    def testReservacionInvalida_HoraEntradaMayor(self):
+        estacio=Estacionamiento() 
+        self.assertFalse(estacio.reservar(6,20))
+        
+    def test_CasoNormal(self):
+        self.assertTrue(self.Esta2.anexar(self.lista2))
+        
+    def test_OnceCarrosMismoHorario(self):
+        self.assertFalse(self.Esta.anexar(self.lista))
 
-if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
-    unittest.main()
+def suite():
+    test_suite = unittest.TestSuite()
+    test_suite.addTest(TestMarzullo)
+    return test_suite
+
+if __name__ == '__main__':
+    runner = unittest.TextTestRunner()
+    test_suite = suite()
+    runner.run(test_suite)
