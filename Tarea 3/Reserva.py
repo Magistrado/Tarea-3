@@ -9,7 +9,7 @@ class Reserva():
         self.iden=iden
     
     def obtId(self):
-        return self.iden
+        return str(self.iden)
     
     def obtInicio(self):
         return self.inicio

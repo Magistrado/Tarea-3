@@ -11,11 +11,6 @@ class Estacionamiento(object):
     puestos =[]
     tablasTuplas=[]
     #Atribtuos Marzullo
-    
-
-    #def __init__(self, capacidad,intervalo_trabajo):
-        #puestos= [[0 for x in range(capacidad)] for x in range(intervalo_trabajo*2)]
-       # puestos= [range(intervalo_trabajo*2) for i in range(capacidad)]
         
     # Formato de la hora: hh:mm en 24 horas    
     def reservar(self, horaEntrada, horaSalida):
@@ -30,11 +25,8 @@ class Estacionamiento(object):
         
         fuente=0
         reservaEntrante=Reserva(fuente,horaEntrada,horaSalida)
-        #print(reservaEntrante.__str__())
         fuente+=1
         self.puestos.append(reservaEntrante)
-        #print(self.puestos)
-        #reservaFactible=
         self.algoritmoMarzullo()
         
      
@@ -44,23 +36,37 @@ class Estacionamiento(object):
         cnt=0
         beststart=0
         bestend=0
-        i=0
+        iden = ''
         for reserva in self.puestos:
             tupla1=Tuplas(reserva.obtId(),reserva.obtInicio(),-1)
             self.tablasTuplas.append(tupla1)
             tupla2=Tuplas(reserva.obtId(),reserva.obtFinal(),1)
             self.tablasTuplas.append(tupla2)
+            self.puestos.remove(reserva)
         
         self.tablasTuplas.sort(key=functools.cmp_to_key(self.compararTuplas))
-        print(self.tablasTuplas)
+        i = 0
         for tupla in self.tablasTuplas:
-            print(tupla)
-            #cnt-=tupla.obtType()
-    
+            i += 1
+            cnt -= tupla.obtType()
+            if best < cnt:
+                best=cnt
+                beststart = tupla.obtOffset()
+                if i < len(self.tablasTuplas) -1 :
+                    bestend = self.tablasTuplas[i+1].obtOffset()
+                    iden = tupla.obtId() + ', ' + self.tablasTuplas[i+1].obtId()
+        if best <= 10:            
+            resultado = Reserva(iden, beststart, bestend)
+            print('Reservacion concretada con exito.')
+            return True
+        else:
+            print('Capacidad excedida.')
+            return False
         
     def compararTuplas(self,tupla1, tupla2):
         return tupla1.offset - tupla2.offset   
         
 Esta=Estacionamiento()    
-Esta.reservar(6, 8)
-Esta.reservar(6, 10)
+Esta.reservar(8,12)
+Esta.reservar(11,13)
+Esta.reservar(10,12)
