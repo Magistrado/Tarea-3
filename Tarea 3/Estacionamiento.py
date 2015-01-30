@@ -44,14 +44,16 @@ class Estacionamiento:
         bestend = 0
         self.tablasTuplas.sort(key=functools.cmp_to_key(self.compararTuplas))
         i = 0
+        print(len(self.tablasTuplas))
         for tupla in self.tablasTuplas:
             i += 1
             cnt -= tupla.obtType()
             if best < cnt:
-                best=cnt
+                best = cnt
                 beststart = tupla.obtOffset()
                 if i < len(self.tablasTuplas) -1 :
-                    bestend = self.tablasTuplas[i+1].obtOffset()           
+                    bestend = self.tablasTuplas[i+1].obtOffset()
+                              
         if best <= self.capacidad:
             self.reservasAdmitidas.append(Reserva(beststart, bestend))
             print('Reservacion concretada con exito.')
